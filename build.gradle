@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openapi.generator' version '7.14.0'
 }
 
 group = 'ru.maximserver'
@@ -46,8 +47,27 @@ dependencies {
 	testImplementation 'org.testcontainers:testcontainers-postgresql'
 	testImplementation 'org.testcontainers:testcontainers-r2dbc'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    //implementation 'org.openapitools:openapi-generator-gradle-plugin:7.14.0' exclude(group: 'org.slf4j', module: 'slf4j-simple')
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+compileJava.dependsOn "openApiGenerate"
+openApiGenerate {
+    generatorName.set("spring")
+    inputSpec.set("$rootDir/src/main/resources/specification/openapi-users.yaml")
+    outputDir.set("$project.buildDir/generated/openapi")
+    apiPackage.set("ru.maximserver.vmuserservice.api")
+    modelPackage.set("ru.maximserver.vmuserservice.model")
+    configOptions.set([library                             : "spring-boot",
+                       useOptional                         : "true",
+                       openApiNullable                     : "false",
+                       interfaceOnly                       : "true",
+                       generatedConstructorWithRequiredArgs: "false",
+                       useTags                             : "true",
+                       basePackage                         : "ru.maximserver.vmuserservice",
+                       useJakartaEe                        : "true",
+                       reactive                            : "true"])
 }
