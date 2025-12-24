@@ -15,6 +15,14 @@ java {
 	}
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += ["$project.buildDir/generated/openapi/src/main/java"]
+        }
+    }
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -47,7 +55,10 @@ dependencies {
 	testImplementation 'org.testcontainers:testcontainers-postgresql'
 	testImplementation 'org.testcontainers:testcontainers-r2dbc'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'jakarta.validation:jakarta.validation-api'
     //implementation 'org.openapitools:openapi-generator-gradle-plugin:7.14.0' exclude(group: 'org.slf4j', module: 'slf4j-simple')
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:3.0.0'
 }
 
 tasks.named('test') {
@@ -56,9 +67,10 @@ tasks.named('test') {
 
 compileJava.dependsOn "openApiGenerate"
 openApiGenerate {
+    Directory outputGenerated = layout.buildDirectory.dir("generated").get()
     generatorName.set("spring")
     inputSpec.set("$rootDir/src/main/resources/specification/openapi-users.yaml")
-    outputDir.set("$project.buildDir/generated/openapi")
+    outputDir.set("$outputGenerated/openapi")
     apiPackage.set("ru.maximserver.vmuserservice.api")
     modelPackage.set("ru.maximserver.vmuserservice.model")
     configOptions.set([library                             : "spring-boot",
