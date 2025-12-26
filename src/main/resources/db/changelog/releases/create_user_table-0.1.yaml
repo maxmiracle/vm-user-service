@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_user_table
+      author: maxim
+      changes:
+        - createTable:
+            tableName: user_account
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar
+              - column:
+                  name: first_name
+                  type: varchar
+              - column:
+                  name: last_name
+                  type: varchar
+              - column:
+                  name: avatar
+                  type: varchar
+              - column:
+                  name: sex
+                  type: smallint
+              - column:
+                  name: verified
+                  type: boolean
+              - column:
+                  name: birthday
+                  type: varchar
+              - column:
+                  name: email
+                  type: varchar
+              - column:
+                  name: phone
+                  type: varchar
