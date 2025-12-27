@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '4.0.1'
 	id 'io.spring.dependency-management' version '1.1.7'
     id 'org.openapi.generator' version '7.14.0'
+    id 'org.jooq.jooq-codegen-gradle' version '3.19.17'
 }
 
 group = 'ru.maximserver'
@@ -59,6 +60,7 @@ dependencies {
     //implementation 'org.openapitools:openapi-generator-gradle-plugin:7.14.0' exclude(group: 'org.slf4j', module: 'slf4j-simple')
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:3.0.0'
+    jooqCodegen "org.jooq:jooq-meta-extensions-liquibase:3.19.17"
 }
 
 tasks.named('test') {
@@ -82,4 +84,40 @@ openApiGenerate {
                        basePackage                         : "ru.maximserver.vmuserservice",
                        useJakartaEe                        : "true",
                        reactive                            : "true"])
+}
+
+compileJava.dependsOn "jooqCodegen"
+jooq {
+    configuration {
+        generator {
+            database {
+                name = "org.jooq.meta.extensions.liquibase.LiquibaseDatabase"
+                properties {
+                    property {
+                        key = "rootPath"
+                        value = "$rootDir/src/main/resources"
+                    }
+                    property {
+                        key = "scripts"
+                        value = "/db/changelog/db.changelog-master.yaml"
+                    }
+                    property {
+                        key = "includeLiquibaseTables"
+                        value = false
+                    }
+                    property {
+                        key = "liquibaseSchemaName"
+                        value = "public"
+                    }
+                    property {
+                        key = "changeLogParameters.contexts"
+                        value = "!test"
+                    }
+                }
+            }
+            target {
+                packageName = "ru.maximserver.vmuserservice.jooq.gen"
+            }
+        }
+    }
 }
