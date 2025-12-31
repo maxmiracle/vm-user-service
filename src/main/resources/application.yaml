@@ -1,3 +1,20 @@
 spring:
   application:
     name: vm-user-service
+  r2dbc:
+    username: ${USER_DB_USER}
+    password: ${USER_DB_PASSWORD}
+    properties:
+      port: ${USER_DB_PORT}
+      host: ${USER_DB_HOST}
+      database: ${USER_DB_NAME}
+      schema: ${USER_DB_SCHEMA}
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    user: ${USER_DB_USER}
+    password: ${USER_DB_PASSWORD}
+    url: jdbc:postgresql://${USER_DB_HOST}:${USER_DB_PORT}/${USER_DB_NAME}
+openapi:
+  user-service:
+    base-path: /

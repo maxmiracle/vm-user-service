@@ -28,6 +28,9 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+    mockitoAgent {
+        transitive = false
+    }
 }
 
 repositories {
@@ -44,13 +47,14 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	runtimeOnly 'org.postgresql:postgresql'
-	runtimeOnly 'org.postgresql:r2dbc-postgresql'
+	implementation 'org.postgresql:r2dbc-postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-r2dbc-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-jooq-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-liquibase-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
 	testImplementation 'org.testcontainers:testcontainers-postgresql'
@@ -61,10 +65,16 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:3.0.0'
     jooqCodegen "org.jooq:jooq-meta-extensions-liquibase:3.19.17"
+    implementation "org.mapstruct:mapstruct:1.6.3"
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    testImplementation 'org.mockito:mockito-core'
+    mockitoAgent 'org.mockito:mockito-core'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+    jvmArgs += "-Xshare:off"
 }
 
 compileJava.dependsOn "openApiGenerate"
