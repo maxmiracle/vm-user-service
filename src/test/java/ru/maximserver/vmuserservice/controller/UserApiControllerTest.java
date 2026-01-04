@@ -11,7 +11,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ru.maximserver.vmuserservice.BaseIntegrationTest;
 import ru.maximserver.vmuserservice.model.UpdateUser;
-import ru.maximserver.vmuserservice.model.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.maximserver.vmuserservice.jooq.gen.Tables.USER_ACCOUNT;
@@ -36,7 +35,7 @@ public class UserApiControllerTest extends BaseIntegrationTest {
         updateUser.setPhone("89000000000");
         webTestClient.post()
                 .uri("/user/1")
-                .body(Mono.just(updateUser), User.class)
+                .body(Mono.just(updateUser), UpdateUser.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
