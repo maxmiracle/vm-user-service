@@ -10,6 +10,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ru.maximserver.vmuserservice.BaseIntegrationTest;
+import ru.maximserver.vmuserservice.model.UpdateUser;
 import ru.maximserver.vmuserservice.model.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,15 +28,15 @@ public class UserApiControllerTest extends BaseIntegrationTest {
 
     @Test
     public void createUser() {
-        User user = new User();
-        user.setUsername("johndoe");
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setEmail("johndoe@mail.com");
-        user.setPhone("89000000000");
+        UpdateUser updateUser = new UpdateUser();
+        updateUser.setUsername("johndoe");
+        updateUser.setFirstName("John");
+        updateUser.setLastName("Doe");
+        updateUser.setEmail("johndoe@mail.com");
+        updateUser.setPhone("89000000000");
         webTestClient.post()
                 .uri("/user/1")
-                .body(Mono.just(user), User.class)
+                .body(Mono.just(updateUser), User.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
