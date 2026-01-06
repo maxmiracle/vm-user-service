@@ -22,7 +22,7 @@ public class UserService {
 
     private final DSLContext dslContext;
 
-    public Mono<@NonNull Void> createUser(Mono<@NonNull UpdateUser> user, @NonNull final Long userId) {
+    public Mono<Void> createUser(Mono<@NonNull UpdateUser> user, @NonNull final Long userId) {
         return user.map(userObject -> userMapper.toUserAccountRecord(userObject, userId))
                 .flatMap(userAccountRecord ->
                         Mono.from(dslContext.insertInto(USER_ACCOUNT).set(userAccountRecord).returning()))
@@ -30,7 +30,7 @@ public class UserService {
                 .then();
     }
 
-    public Mono<@NonNull Void> deleteUser(Long userId) {
+    public Mono<Void> deleteUser(Long userId) {
       return Mono.from(dslContext.delete(USER_ACCOUNT)
                     .where(USER_ACCOUNT.ID.eq(userId)).returning())
               .switchIfEmpty(Mono.error(userNotFound(userId)))
@@ -47,7 +47,7 @@ public class UserService {
     }
 
 
-    public Mono<@NonNull Void> updateUser(Long userId, Mono<@NonNull UpdateUser> user) {
+    public Mono<Void> updateUser(Long userId, Mono<@NonNull UpdateUser> user) {
         return user.map(userObject -> userMapper.toUserAccountRecord(userObject, userId))
                 .flatMap(userAccountRecord -> Mono.from(dslContext.update(USER_ACCOUNT).set(userAccountRecord)
                         .where(USER_ACCOUNT.ID.eq(userId)).returning()))

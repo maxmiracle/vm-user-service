@@ -21,7 +21,7 @@ public class UserApiController implements UserApi {
     private final UserService userService;
 
     @Override
-    public Mono<@NonNull ResponseEntity<@NonNull Void>> createUser(
+    public Mono<@NonNull ResponseEntity<Void>> createUser(
             final Long userId,
             final Mono<@NonNull UpdateUser> updateUser,
             final ServerWebExchange exchange
@@ -31,7 +31,7 @@ public class UserApiController implements UserApi {
     }
 
     @Override
-    public Mono<@NonNull ResponseEntity<@NonNull Void>> deleteUser(
+    public Mono<@NonNull ResponseEntity<Void>> deleteUser(
             final Long userId,
             final ServerWebExchange exchange){
         return userService.deleteUser(userId)
@@ -46,7 +46,7 @@ public class UserApiController implements UserApi {
     }
 
     @Override
-    public Mono<@NonNull ResponseEntity<@NonNull Void>> updateUser(
+    public Mono<@NonNull ResponseEntity<Void>> updateUser(
             final Long userId,
             final Mono<@NonNull UpdateUser> user,
             final ServerWebExchange exchange
